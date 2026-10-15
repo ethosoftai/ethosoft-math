@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Ethosoft-Math"
+version = "0.2.0"
+description = "Convert math solutions into verified tool-use traces (add(3, 4) -> 7) with an executable math tool protocol."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Ethosoft" }]
+keywords = ["math", "tool-use", "llm", "dataset", "reasoning", "sympy", "function-calling"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["sympy>=1.12"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+ethosoft-math = "ethosoft_math.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+license-files = []

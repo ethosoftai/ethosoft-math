@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+samples/
+samples_ho/
+unc_*.jsonl
+.pypirc
+.env

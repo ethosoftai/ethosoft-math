@@ -1,0 +1,91 @@
+import ethosoft_math as em
+
+
+def test_execute_turkish_names():
+    assert em.execute("topla(3, 4)") == "7"
+    assert em.execute("bol(1, 3)") == "1/3"
+    assert em.execute("bol(1, 4)") == "0.25"
+    assert em.execute("carp(topla(3, 4), 2)") == "14"
+    assert em.execute("faktoriyel(5)") == "120"
+    assert em.execute("kombinasyon(10, 3)") == "120"
+
+
+def test_english_aliases_still_work():
+    assert em.execute("add(3, 4)") == "7"
+    assert em.execute("mul(add(3, 4), 2)") == "14"
+    assert em.execute("fact(5)") == "120"
+
+
+def test_trig_and_symbolic():
+    assert em.execute("sin(dereceden_radyana(30))") == "0.5"
+    assert em.execute('coz("x^2 - 4 = 0", "x")') == "[-2, 2]"
+    assert em.execute('ac("(x+1)^2")') == "x^2 + 2*x + 1"
+    assert em.execute('coz("x^2 - 5*x + 6 > 0", "x")') == "(-oo, 2) U (3, oo)"
+    assert em.execute('esit_mi("(x+1)^2", "x^2+2x+1")') == "dogru"
+
+
+def test_convert_simple_equation_turkish_default():
+    out = em.convert("Toplam 3 + 4 = 7 elma.")
+    assert out == "Toplam <arac_cagrisi>topla(3, 4)</arac_cagrisi><arac_sonucu>7</arac_sonucu> elma."
+
+
+def test_convert_english_mode():
+    out = em.convert("Toplam 3 + 4 = 7 elma.", lang="en")
+    assert out == "Toplam <tool_call>add(3, 4)</tool_call><tool_result>7</tool_result> elma."
+    assert em.delocalize(em.convert("2 + 2 = 4")) == "<tool_call>add(2, 2)</tool_call><tool_result>4</tool_result>"
+
+
+def test_wrong_equation_is_left_alone():
+    text = "Wrong: 2 + 2 = 5."
+    assert em.convert(text) == text
+
+
+def test_gsm8k_annotation():
+    text = "Natalia sold 48/2 = <<48/2=24>>24 clips in May."
+    out = em.convert(text)
+    assert "<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>24</arac_sonucu>" in out
+    assert "<<" not in out
+
+
+def test_latex_boxed_and_rounding():
+    out = em.convert("So $x=\\frac{70}{8}=\\boxed{8.75}$ and $80/3 = 26.67$.")
+    assert "bol(70, 8)" in out and "\\boxed{8.75}" in out
+    assert "yuvarla(bol(80, 3), 2)" in out
+
+
+def test_every_converted_call_verifies_both_languages():
+    text = ("We have $\\binom{5}{2} = 10$, $5! = 120$, $\\sqrt{50} = 5\\sqrt{2}$, "
+            "$\\sum_{k=1}^{4} k^2 = 30$ and $1 + 2 + \\cdots + 100 = 5050$.")
+    for lang in ("tr", "en"):
+        total, bad = em.verify(em.convert(text, lang=lang))
+        assert total >= 4 and bad == 0
+
+
+def test_code_is_not_touched():
+    code = "x = 3 + 4\nprint(x)"
+    assert em.convert(code) == code
+
+
+def test_calculator():
+    assert em.calculate("4 + 5") == "9"
+    assert em.calculate("4+5=") == "9"
+    assert em.calculate("(3 + 4) x 2 ?") == "14"
+    assert em.calculate("2 uzeri 10") == "1024"
+    assert em.calculate("12 bolu 4") == "3"
+    assert em.calculate("1.250,50 + 3,5") == "1254"
+    assert em.calculate("kare kok 144") == "12"
+    assert em.calculate("1/3 + 1/6") == "0.5"
+    assert em.calculate("(x+1)^2 - x^2") == "2*x + 1"
+
+
+def test_calculator_trace_and_tool():
+    assert em.calculate("4 + 5", trace=True) == "<arac_cagrisi>topla(4, 5)</arac_cagrisi><arac_sonucu>9</arac_sonucu>"
+    assert em.execute('hesapla("7 * 6")') == "42"
+    assert em.execute('calc("2 uzeri 5")') == "32"
+
+
+def test_protocol_doc_is_turkish_and_lists_functions():
+    md = em.render_protocol_md()
+    assert "topla(a, b, ...)" in md and "coz(" in md and "hesapla(" in md
+    assert "<arac_cagrisi>" in md
+    assert len(em.functions()) > 80
