@@ -2,7 +2,8 @@ import argparse
 import json
 import sys
 
-from . import __version__, calculate, convert_text, execute, render_protocol_md, verify_converted
+from . import (__version__, calculate, convert_text, execute, fill_results, render_protocol_md,
+               tool_use, verify_converted)
 
 
 def _convert_file(args):
@@ -48,6 +49,14 @@ def main(argv=None):
     k.add_argument("expr")
     k.add_argument("--trace", action="store_true", help="arac cagrisi izini de goster")
     k.set_defaults(func=lambda a: print(calculate(a.expr, trace=a.trace)))
+
+    f = sub.add_parser("fill", help="metindeki <arac_cagrisi> bloklarini calistirip <arac_sonucu> yaz")
+    f.add_argument("text", nargs="?", help="verilmezse stdin okunur")
+    f.set_defaults(func=lambda a: print(fill_results(a.text if a.text is not None else sys.stdin.read())))
+
+    t = sub.add_parser("tool-use", help="duz metni tool-use bicimine cevir")
+    t.add_argument("text")
+    t.set_defaults(func=lambda a: print(tool_use(a.text)))
 
     e = sub.add_parser("exec", help="tek bir arac cagrisini calistir, orn: topla(3, 4)")
     e.add_argument("call")

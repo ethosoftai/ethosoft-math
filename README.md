@@ -25,6 +25,27 @@ em.verify(em.convert(text))             # (cagri_sayisi, hatali_sayisi)
 em.convert(text, lang="en")             # <tool_call>add(3, 4)</tool_call>...
 ```
 
+## Araç çalıştırıcı (modelin hesap makinesi)
+
+Model `<arac_cagrisi>` bloğunu yazar; kütüphane içindeki çağrıyı çalıştırıp
+`<arac_sonucu>` arasına sonucu yazar:
+
+```python
+em.fill_results("<arac_cagrisi>bol(48, 2)</arac_cagrisi>")
+# '<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>24</arac_sonucu>'
+
+em.result_block("bol(48, 2)")   # '<arac_sonucu>24</arac_sonucu>'   (sadece sonuç bloğu)
+```
+
+Üretim döngüsünde: model `</arac_cagrisi>` yazınca dur → `result_block(metin)` → dönen bloğu ekleyip devam et.
+Hata olursa sonuç `HATA: neden` olur; `tanimla(...)` tanımları aynı metinde sonraki çağrılarda geçerlidir.
+
+## Düz metin → tool-use
+
+```python
+em.tool_use("Mayıs'ta 48 / 2 = 24 kart, toplam 48 + 24 = 72.")
+```
+
 ## Neden
 
 LLM'e hesabı "kafadan" yaptırmak yerine aracı çağırtmak için eğitim verisi üretirsin.

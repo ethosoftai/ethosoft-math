@@ -13,9 +13,11 @@ from .protocol import (  # noqa: F401
     execute, parse_call, run, render_protocol_md, localize, delocalize, set_language,
 )
 from .calc import calculate, evaluate  # noqa: F401
+from .tooluse import tool_use  # noqa: F401
+from .runtime import fill_results, result_block  # noqa: F401
 from .converter import convert_text, verify_converted  # noqa: F401
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 def convert(text: str, aggressive: bool = False, lang: str = None) -> str:

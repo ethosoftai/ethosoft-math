@@ -116,3 +116,29 @@ def test_calculator_symbolic_implicit_variables():
     assert em.calculate("2ab + 3ab") == "5*a*b"
     assert em.calculate("(a+b)^2 = a^2+2ab+b^2") == "dogru"
     assert em.calculate("10 km / 2") == "5"
+
+
+def test_fill_results_basic():
+    assert em.fill_results("<arac_cagrisi>bol(48, 2)</arac_cagrisi>") == \
+        "<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>24</arac_sonucu>"
+
+
+def test_fill_results_partial_wrong_and_text():
+    assert em.fill_results("<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>") == \
+        "<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>24</arac_sonucu>"
+    assert em.fill_results("<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>999</arac_sonucu> ok") == \
+        "<arac_cagrisi>bol(48, 2)</arac_cagrisi><arac_sonucu>24</arac_sonucu> ok"
+    assert em.fill_results("x <arac_cagrisi>topla(1, 2)</arac_cagrisi> y").startswith("x <arac_cagrisi>")
+
+
+def test_fill_results_define_error_and_english():
+    out = em.fill_results('<arac_cagrisi>tanimla("f", "x", "x^2 + 1")</arac_cagrisi> '
+                          '<arac_cagrisi>f(3)</arac_cagrisi>')
+    assert "<arac_sonucu>10</arac_sonucu>" in out
+    assert "HATA: sifira bolme" in em.fill_results("<arac_cagrisi>bol(1, 0)</arac_cagrisi>")
+    assert em.fill_results("<tool_call>add(3, 4)</tool_call>") == "<tool_call>add(3, 4)</tool_call><tool_result>7</tool_result>"
+
+
+def test_result_block():
+    assert em.result_block("bol(48, 2)") == "<arac_sonucu>24</arac_sonucu>"
+    assert em.result_block("on <arac_cagrisi>carp(topla(3, 4), 2)</arac_cagrisi>") == "<arac_sonucu>14</arac_sonucu>"

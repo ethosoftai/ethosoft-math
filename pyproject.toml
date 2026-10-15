@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Ethosoft-Math"
-version = "0.3.0"
+version = "0.4.0"
 description = "Convert math solutions into verified tool-use traces (add(3, 4) -> 7) with an executable math tool protocol."
 readme = "README.md"
 requires-python = ">=3.9"
