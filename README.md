@@ -13,6 +13,12 @@ em.calculate("4 + 5")              # '9'      <- hesap makinesi
 em.calculate("2 uzeri 10")         # '1024'
 em.calculate("1.250,50 + 3,5")     # '1254'   (Türkçe sayı yazımı)
 em.calculate("4 + 5", trace=True)  # '<arac_cagrisi>topla(4, 5)</arac_cagrisi><arac_sonucu>9</arac_sonucu>'
+em.calculate("17 mod 5")           # '2'
+em.calculate("50'nin %20'si")      # '10'
+em.calculate("3 < 5")              # 'dogru'
+em.calculate("100 / 3", decimals=2)  # '33.33'
+em.calculate("(a+b)^2 = a^2+2ab+b^2")  # 'dogru'
+em.calculate("bana 12 * 12 yi hesapla")  # '144'
 
 em.execute('coz("x^2 - 4 = 0", "x")')   # '[-2, 2]'
 em.verify(em.convert(text))             # (cagri_sayisi, hatali_sayisi)

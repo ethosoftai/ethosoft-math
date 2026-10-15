@@ -89,3 +89,30 @@ def test_protocol_doc_is_turkish_and_lists_functions():
     assert "topla(a, b, ...)" in md and "coz(" in md and "hesapla(" in md
     assert "<arac_cagrisi>" in md
     assert len(em.functions()) > 80
+
+
+def test_calculator_extended():
+    assert em.calculate("17 mod 5") == "2"
+    assert em.calculate("17 % 5") == "2"
+    assert em.calculate("50'nin %20'si") == "10"
+    assert em.calculate("%20 of 150") == "30"
+    assert em.calculate("10 000 + 5") == "10005"
+    assert em.calculate("1.000.000 + 1") == "1000001"
+    assert em.calculate("1.000 + 500", locale="tr") == "1500"
+    assert em.calculate("1e3 + 1") == "1001"
+    assert em.calculate("3 < 5") == "dogru"
+    assert em.calculate("2 + 2 = 5") == "yanlis"
+    assert em.calculate("1 < 2 < 3") == "dogru"
+    assert em.calculate("max(3, 7, 9)") == "9"
+    assert em.calculate("kombinasyon(10, 3)") == "120"
+    assert em.calculate("bana 12 * 12 yi hesapla") == "144"
+    assert em.calculate("kaç eder 4 + 5") == "9"
+    assert em.calculate("100 / 3", decimals=2) == "33.33"
+    assert em.calculate("5 / 0", on_error="text").startswith("HATA")
+
+
+def test_calculator_symbolic_implicit_variables():
+    assert em.calculate("3x + 2x") == "5*x"
+    assert em.calculate("2ab + 3ab") == "5*a*b"
+    assert em.calculate("(a+b)^2 = a^2+2ab+b^2") == "dogru"
+    assert em.calculate("10 km / 2") == "5"

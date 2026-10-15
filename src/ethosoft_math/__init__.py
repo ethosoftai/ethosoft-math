@@ -15,7 +15,7 @@ from .protocol import (  # noqa: F401
 from .calc import calculate, evaluate  # noqa: F401
 from .converter import convert_text, verify_converted  # noqa: F401
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 def convert(text: str, aggressive: bool = False, lang: str = None) -> str:
