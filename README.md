@@ -101,3 +101,30 @@ ethosoft-math convert in.jsonl out.jsonl --field solution [--lang en] [--aggress
 - Çeviri modelinden önce çalıştırılmalıdır; araç blokları çeviriden korunmalıdır.
 
 Lisans: MIT
+
+## Translation (EN → TR) — `Ethosoft-Math-Translator`
+
+Since 0.5.0 the library can translate math text to Turkish with the fine-tuned
+[`ethosoftai/Ethosoft-Math-Translator`](https://huggingface.co/ethosoftai/Ethosoft-Math-Translator)
+(built on [NedoTranslator](https://huggingface.co/nmsofficial/NedoTranslator)). Formulas, symbols, code
+and numbers are masked (`[[n]]`), the words are translated, the formulas are put back byte-for-byte; a
+row whose formulas cannot be guaranteed is rejected instead of corrupted.
+
+```bash
+pip install "Ethosoft-Math[translate]"
+```
+
+```python
+from ethosoft_math.translate import MathTranslator
+
+t = MathTranslator()
+print(t.translate("If $x^2 = 9$, then x = ±3."))
+row = t.translate_record({"problem": "What is $1+1$?", "solution": "It is $2$."})   # None if a formula was at risk
+```
+
+```bash
+ethosoft-math translate "Compute $x^2$ for x = 3."
+ethosoft-math translate --input data.jsonl --output data_tr.jsonl
+```
+
+The model card lives in `docs/MODEL_CARD.md`.
