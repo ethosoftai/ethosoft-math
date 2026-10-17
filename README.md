@@ -128,3 +128,23 @@ ethosoft-math translate --input data.jsonl --output data_tr.jsonl
 ```
 
 The model card lives in `docs/MODEL_CARD.md`.
+
+### Turkish text → tool format
+
+The tool converter understands Turkish solutions too (Unicode units such as `öğrenci`, decimal comma `4,50`,
+thousands dot `50.000`, `4,50 $` currency suffix, `x` multiplication, `çarpı / bölü / artı / eksi / eşittir`).
+Numbers in the untouched prose keep their Turkish formatting.
+
+```python
+import ethosoft_math as em
+em.convert("Her biri 4,50 $ olan 2 hamur işi alır, yani bu 2*4,50 = 9,00 $'dır.")
+# '… yani bu <arac_cagrisi>carp(2, 4.5)</arac_cagrisi><arac_sonucu>9</arac_sonucu> $'dır.'
+
+# translate EN → TR and convert the calculations to tool calls in one step
+from ethosoft_math.translate import MathTranslator
+MathTranslator().translate_record({"problem": "...", "solution": "..."}, tools=True)
+```
+
+```bash
+ethosoft-math translate --input data.jsonl --output data_tr_tools.jsonl --tools
+```
