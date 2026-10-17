@@ -22,7 +22,7 @@ _TOK = re.compile(r"""
   (?P<NUM>(?<![\d.])(?:\d{1,3}(?:(?:,\\!|\{,\}|,)\d{3})+(?!\d)|\d+)(?:\.\d+)?|(?<![\d.])\.\d+)
  |(?P<CMD>\\[A-Za-z]+)
  |(?P<ESC>\\[%$,;!:\s_])
- |(?P<WORD>[A-Za-zÀ-ɏ]+)
+ |(?P<WORD>[A-Za-zÀ-ÖØ-öø-ɏ]+)
  |(?P<SP>\s+)
  |(?P<CH>.)
 """, re.X | re.S)
@@ -744,7 +744,7 @@ _LATEX_HINT = re.compile(r"\\(?:frac|dfrac|sqrt|times|cdot|boxed|text|left|right
                          r"Rightarrow|implies)\b|\^\{|\\\(|\\\[")
 _REGION = re.compile(r"\$\$(.+?)\$\$|\$([^$\n]+?)\$|\\\((.+?)\\\)|\\\[(.+?)\\\]", re.S)
 _ALLOWED_OPS = set("+-*/^(){}!%")
-_X_MULT = re.compile(r"(?<=[\d)])(\s*|\s+(?:[A-Za-z\u00c0-\u024f]+\s+){1,2})[xX](\s*)(?=[\d($])")
+_X_MULT = re.compile(r"(?<=[\d)])(\s*|\s+(?:[A-Za-z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u024f]+\s+){1,2})[xX](\s*)(?=[\d($])")
 _CODE_HINT = re.compile(r"^\s*(print\(|def |import |from \w+ import |for .+ in |return )", re.M)
 
 

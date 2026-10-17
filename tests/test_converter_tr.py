@@ -34,6 +34,13 @@ def test_x_as_multiplication_between_turkish_words():
     assert "carp(10, 20)" in out
 
 
+def test_unicode_times_and_divide_signs_are_operators_not_letters():
+    # regresyon: U+00D7 / U+00F7 harf araligina girmemeli
+    assert "carp(6, 7)" in _conv("Toplam 6 × 7 = 42 elma.")
+    assert "bol(48, 2)" in _conv("48 ÷ 2 = 24")
+    assert "carp(6, 7)" in _conv("The area is 6 × 7 = 42 square units.")
+
+
 def test_english_unaffected_by_locale_auto():
     assert _conv("The total is 1,500 + 2,500 = 4,000 dollars.") == _conv("The total is 1,500 + 2,500 = 4,000 dollars.", locale="en")
     assert "topla(1500, 2500)" in _conv("The total is 1,500 + 2,500 = 4,000 dollars.")
