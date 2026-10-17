@@ -79,7 +79,7 @@ pip install "Ethosoft-Math[translate]"
 ```python
 from ethosoft_math.translate import MathTranslator
 
-t = MathTranslator()   # downloads ethosoftai/Ethosoft-Math-Translator
+t = MathTranslator()   # downloads Ethosoft/Ethosoft-Math-Translator
 print(t.translate("If $x^2 = 9$, then x = ±3.\nThe answer is $\\boxed{3}$ or $-3$."))
 # Eğer $x^2 = 9$ ise, x = ±3.
 # Cevap $\boxed{3}$ veya $-3$'tür.
@@ -102,8 +102,8 @@ The raw model works on **already masked** text. If you call it directly, mask ma
 
 ```python
 from transformers import MarianMTModel, MarianTokenizer
-tok = MarianTokenizer.from_pretrained("ethosoftai/Ethosoft-Math-Translator")
-model = MarianMTModel.from_pretrained("ethosoftai/Ethosoft-Math-Translator")
+tok = MarianTokenizer.from_pretrained("Ethosoft/Ethosoft-Math-Translator")
+model = MarianMTModel.from_pretrained("Ethosoft/Ethosoft-Math-Translator")
 
 batch = tok(["Therefore the value of [[1]] is [[2]]."], return_tensors="pt")
 out = model.generate(**batch, num_beams=4, max_new_tokens=256)
@@ -125,6 +125,28 @@ Of the 5.1 % rejected rows, 11 were placeholder failures and 3 changed a number 
 
 On sampled rows the output is close to the teacher's translations (see below); we did not run a
 human evaluation, so treat fluency claims accordingly.
+
+## In production: 755,035 rows translated
+
+The released checkpoint was run over the full pool of math corpora (on top of the 27,768 teacher-translated
+rows used for training). Every row went through the same quality gate; rows that failed were **deleted, not repaired**.
+
+| Dataset | Translated | Rejected | Pass rate |
+|---|---:|---:|---:|
+| MetaMathQA | 382,532 | 8,180 | 97.9 % |
+| MathInstruct | 111,186 | 6,061 | 94.8 % |
+| OpenR1-Math | 78,894 | 10,767 | 88.0 % |
+| NuminaMath-TIR | 64,772 | 4,944 | 92.9 % |
+| Orca-Math | 59,239 | 2,584 | 95.8 % |
+| AQuA-RAT | 40,103 | 1,295 | 96.9 % |
+| MATH | 7,886 | 858 | 90.2 % |
+| GSM8K | 6,228 | 171 | 97.3 % |
+| DeepScaleR | 4,195 | 1,537 | 73.2 % |
+| **Total** | **755,035** | **36,397** | **95.4 %** |
+
+Main rejection reasons: a placeholder was damaged (17.7 k), a number changed (17.2 k), answer lost (0.6 k),
+formula changed (0.5 k), output not Turkish (0.4 k). Throughput on a single H100: ~10–19 rows/s (beam 4).
+Hard competition sets such as DeepScaleR lose the most rows because their solutions are dense with formulas.
 
 ## Training
 
@@ -177,7 +199,7 @@ If you use Ethosoft-Math-Translator:
   title        = {Ethosoft-Math-Translator: Symbol-Preserving English-to-Turkish Mathematical Translation},
   author       = {Ethosoft},
   year         = {2026},
-  howpublished = {\url{https://huggingface.co/ethosoftai/Ethosoft-Math-Translator}},
+  howpublished = {\url{https://huggingface.co/Ethosoft/Ethosoft-Math-Translator}},
   note         = {Fine-tuned from NedoTranslator (nmsofficial)}
 }
 ```

@@ -105,7 +105,7 @@ Lisans: MIT
 ## Translation (EN → TR) — `Ethosoft-Math-Translator`
 
 Since 0.5.0 the library can translate math text to Turkish with the fine-tuned
-[`ethosoftai/Ethosoft-Math-Translator`](https://huggingface.co/ethosoftai/Ethosoft-Math-Translator)
+[`Ethosoft/Ethosoft-Math-Translator`](https://huggingface.co/Ethosoft/Ethosoft-Math-Translator)
 (built on [NedoTranslator](https://huggingface.co/nmsofficial/NedoTranslator)). Formulas, symbols, code
 and numbers are masked (`[[n]]`), the words are translated, the formulas are put back byte-for-byte; a
 row whose formulas cannot be guaranteed is rejected instead of corrupted.
